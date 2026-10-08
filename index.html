@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Kaylie Hynes. Machine learning and image analysis for medical imaging and cancer research.">
+<title>Kaylie Hynes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Tinos:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one column, a sticky tab bar, one tab visible at a time. Two accents: purple (imaging), dark blue (genomics). White, light-only by choice. used sparingly. */
+:root {
+  --bg: #ffffff;
+  --surface: #faf9fc;
+  --ink: #1a1625;
+  --muted: #5e5a6b;
+  --line: #e4e1ea;
+  --ch1: #5b2a86;   /* purple, imaging */
+  --ch2: #1d3a8a;   /* dark blue, genomics */
+  --ch2-text: #1d3a8a;
+  --ch1-soft: #5b2a8612;
+  --ch2-soft: #1d3a8a10;
+  --display: "Times New Roman", Tinos, Times, serif;
+  --body: "EB Garamond", Garamond, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 19px; line-height: 1.6; }
+.wrap { max-width: 980px; margin: 0 auto; padding-inline: 20px; }
+
+/* Header */
+header { padding-block: 40px 20px; }
+.head { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.head-text { min-width: 0; flex: 1 1 280px; }
+.photo { flex: none; width: 112px; height: 112px; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: linear-gradient(135deg, var(--ch1), var(--ch2)); box-shadow: 0 0 0 4px var(--bg), 0 0 0 5px var(--line); }
+.photo span { font-family: var(--display); font-size: 2.4rem; color: #fff; letter-spacing: 0.02em; }
+.photo img { width: 100%; height: 100%; object-fit: cover; }
+.bar { color: var(--line); margin-inline: 6px; }
+@media (max-width: 520px) { .photo { width: 88px; height: 88px; } .photo span { font-size: 1.9rem; } }
+.name { font-family: var(--display); font-weight: 400; font-size: clamp(2rem, 6vw, 3rem); line-height: 1.05; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+.tagline { color: var(--muted); margin: 10px 0 0; max-width: none; font-size: 1.02rem; }
+.tagline .deg { white-space: nowrap; }
+.channels { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 14px; font-family: var(--mono); font-size: 0.78rem; color: var(--muted); }
+.channels span { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; }
+
+/* Tab bar */
+nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.tabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding-block: 6px; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex: none; font: 400 1rem var(--display); color: var(--muted); background: none; border: 0; padding: 8px 12px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+.tab:hover { color: var(--ink); background: var(--ch2-soft); }
+.tab[aria-selected="true"] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--ch1); border-radius: 6px 6px 0 0; }
+.tab:focus-visible, a:focus-visible { outline: 2px solid var(--ch2); outline-offset: 2px; }
+.sep { flex: none; width: 1px; background: var(--line); margin: 6px 4px; }
+
+/* Panels */
+main { padding-block: 32px 64px; }
+section { display: grid; gap: 28px; }
+h2 { font-family: var(--display); font-weight: 400; font-size: 2rem; line-height: 1.15; margin: 0; text-wrap: balance; }
+h3 { font-family: var(--display); font-weight: 700; font-size: 1.12rem; margin: 0; }
+p { margin: 0; max-width: 84ch; }
+.eyebrow { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ch2-text); }
+.lede { font-size: 1.1rem; color: var(--muted); }
+.block { display: grid; gap: 8px; }
+.ph { color: var(--muted); font-style: italic; }
+
+/* Project meta row */
+.meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-family: var(--mono); font-size: 0.75rem; padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); }
+.chip.status { border-color: var(--ch1); color: var(--ch1); }
+
+/* Figure placeholder styled like a microscopy/scan panel */
+figure { margin: 0; display: grid; gap: 8px; }
+.frame { position: relative; aspect-ratio: 16 / 9; max-width: 100%; border: 1px solid var(--line); border-radius: 4px; background:
+  radial-gradient(circle at 30% 40%, var(--ch1-soft), transparent 40%),
+  radial-gradient(circle at 70% 60%, var(--ch2-soft), transparent 45%), var(--surface);
+  display: grid; place-items: center; color: var(--muted); font-family: var(--mono); font-size: 0.8rem; }
+.scalebar { position: absolute; right: 14px; bottom: 12px; display: grid; justify-items: end; gap: 3px; font-family: var(--mono); font-size: 0.7rem; color: var(--ink); }
+.scalebar i { display: block; width: 64px; height: 3px; background: var(--ink); }
+figure img { display: block; width: 100%; height: auto; max-width: 100%; border: 1px solid var(--line); border-radius: 4px; }
+figure.small img { max-width: 640px; }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: start; }
+@media (max-width: 560px) { .pair { grid-template-columns: 1fr; } }
+.notice { display: grid; gap: 6px; padding: 22px; border: 1px dashed var(--ch1); border-radius: 8px; background: var(--ch1-soft); }
+.notice .eyebrow { color: var(--ch1); }
+figcaption { font-size: 0.85rem; color: var(--muted); }
+
+/* Home cards */
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+.card { display: grid; gap: 6px; text-align: left; padding: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; color: var(--ink); font: inherit; cursor: pointer; }
+.card:hover { border-color: var(--ch1); }
+.card .k { font-family: var(--mono); font-size: 0.72rem; color: var(--ch1); letter-spacing: 0.06em; text-transform: uppercase; }
+.card p { color: var(--muted); font-size: 0.92rem; }
+
+/* Lists */
+.list { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.row { display: grid; grid-template-columns: 110px 1fr; gap: 16px; padding-block: 14px; border-bottom: 1px solid var(--line); }
+.row > div { min-width: 0; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+th, td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line); }
+th { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+td:last-child, th:last-child { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; padding-right: 0; }
+.row .when { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+@media (max-width: 520px) { .row { grid-template-columns: 1fr; gap: 4px; } }
+
+a { color: var(--ch2-text); }
+footer { border-top: 1px solid var(--line); padding-block: 24px; font-size: 0.85rem; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) { section:not([hidden]) { animation: in .25s ease-out; } @keyframes in { from { transform: translateY(4px); } to { transform: none; } } }
+</style>
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+
+<header class="wrap">
+  <div class="head">
+    <div class="photo"><img src="images/kaylie.jpg" alt="Kaylie Hynes" width="440" height="440"></div>
+    <div class="head-text">
+      <h1 class="name">Kaylie Hynes</h1>
+      <p class="tagline"><span class="deg">MSc Computer Science, University of St Andrews</span> <span class="bar">|</span> <span class="deg">B.S. Information Technology, Pace University</span></p>
+      <div class="channels" aria-hidden="true">
+        <span><i class="dot" style="background:var(--ch1)"></i>Imaging</span>
+        <span><i class="dot" style="background:var(--ch2)"></i>Genomics</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav aria-label="Site sections">
+  <div class="wrap tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="home">Home</button>
+    <span class="sep"></span>
+    <button class="tab" role="tab" data-tab="dissertation">Brain Tumor Segmentation</button>
+    <button class="tab" role="tab" data-tab="synapse">hTDP-43 Synapses</button>
+    <button class="tab" role="tab" data-tab="project3">Project 3</button>
+    <button class="tab" role="tab" data-tab="project4">Project 4</button>
+    <span class="sep"></span>
+    <button class="tab" role="tab" data-tab="reading">Reading Notes</button>
+    <button class="tab" role="tab" data-tab="about">About</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- HOME -->
+  <section id="home" role="tabpanel">
+    <div class="block">
+      <span class="eyebrow">Overview</span>
+      <h2>Machine Learning for Cancer Research</h2>
+      <p class="lede">I recently completed my MSc in Computer Science at the University of St Andrews, where my work sat right where computing meets medicine. Over the past year, I've built deep learning and image analysis tools for very different kinds of biomedical data, from brain tumor MRI scans to 3D microscopy of nerve cells. Now I'm focusing on cancer research and learning to work with genetic data alongside medical images. I'm also looking for hands-on wet lab experience, because I want to understand the biology behind the data as well as I understand the code.</p>
+    </div>
+    <div class="grid">
+      <button class="card" data-go="dissertation"><span class="k">Dissertation · Brain Tumors</span><h3>Brain Tumor Segmentation</h3><p>3D U-Net Detection of Gliomas in MRI</p></button>
+      <button class="card" data-go="synapse"><span class="k">Research · Coming Soon</span><h3>hTDP-43 3D Synapse Analysis</h3><p>3D Image Analysis of Light-Sheet Microscopy</p></button>
+      <button class="card" data-go="project3"><span class="k">In Progress · Cancer Genomics</span><h3>Project 3</h3><p>[Your Next Bioinformatics Project]</p></button>
+      <button class="card" data-go="project4"><span class="k">Planned · Cancer Genomics</span><h3>Project 4</h3><p>[Another Bioinformatics Project]</p></button>
+    </div>
+  </section>
+
+  <!-- DISSERTATION -->
+  <section id="dissertation" role="tabpanel" hidden>
+    <div class="block">
+      <span class="eyebrow">MSc Dissertation · 2026</span>
+      <h2>Deep Learning Based Detection of Brain Tumors in MRI Images</h2>
+      <div class="meta"><span class="chip">BraTS 2021 + 2024</span><span class="chip">MRI · T1 / T1ce / T2 / FLAIR</span><span class="chip">PyTorch</span><span class="chip">3D U-Net</span><span class="chip status">Complete</span></div>
+    </div>
+    <div class="block"><h3>The Question</h3><p>Before surgery or radiation, doctors need a precise outline of a brain tumor on MRI, and drawing that outline by hand, slice by slice, can take hours. Deep learning models can do it in seconds. But most of them are trained and tested on scans taken at diagnosis, before any treatment has happened. I wanted to find out how well these models really perform, and whether one trained on pre-treatment scans could still find tumors in patients who had already been treated.</p></div>
+    <div class="block"><h3>Data</h3><p>My training data came from BraTS 2021, a widely used collection of pre-treatment glioma scans in which experts have carefully labeled every tumor. To test the model on something new, I used 417 patients from BraTS 2024, whose scans were all taken after treatment. Each patient has four types of MRI scan. The labels split every tumor into three regions, the whole tumor, the tumor core, and the enhancing tumor, which is the part that lights up when a contrast dye is given.</p></div>
+    <figure>
+      <img src="images/mri-scan-types.jpg" alt="The same brain slice shown in four MRI scan types: T1, T1ce, T2, and T2-FLAIR" loading="lazy" width="1873" height="422">
+      <figcaption>Figure 1. The four MRI scan types the model uses as input, shown for one patient. Each type highlights different tissue, so together they give the model a fuller picture of the tumor.</figcaption>
+    </figure>
+    <div class="block"><h3>Approach</h3><p>I worked in stages. First, I built a 2D U-Net, which looks at the brain one flat slice at a time, to set a baseline. Then I built a 3D U-Net that takes in the whole brain volume at once, so it can follow a tumor's shape from one slice to the next. I trained both models on the university's GPU cluster. Next came the real test. I ran the 3D model on the post-treatment scans without any retraining, to see how it would cope with images it had never been prepared for. Along the way, I used Grad-CAM heatmaps to look inside the models and check which parts of each scan they were paying attention to.</p></div>
+    <figure>
+      <div class="pair">
+        <img src="images/gradcam-2d.jpg" alt="Grad-CAM grid for the 2D U-Net showing worst, average, and best cases, each with the scan, expert labels, prediction, and heatmap" loading="lazy" width="1277" height="986">
+        <img src="images/gradcam-3d.jpg" alt="Grad-CAM grid for the 3D U-Net showing worst, average, and best cases, each with the scan, expert labels, prediction, and heatmap" loading="lazy" width="2600" height="2000">
+      </div>
+      <figcaption>Figure 2. The 2D U-Net (left) and 3D U-Net (right) on their worst, average, and best cases. Each row shows the scan, the expert's labels, the model's prediction, and a Grad-CAM heatmap of where the model focused. Red is tumor core, green is enhancing tumor, and blue is swelling around the tumor. On the hardest case, the 2D model's attention is scattered across the whole scan, while the 3D model's heatmap stays quiet with only a few small hotspots.</figcaption>
+    </figure>
+    <div class="block">
+      <h3>Results</h3>
+      <p>To measure accuracy, I used the Dice score, which compares the model's outline with the expert's. A score of 1 means the two match perfectly. A score of 0 means they don't overlap at all.</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Model</th><th>Test data</th><th>Mean Dice</th></tr></thead>
+        <tbody>
+          <tr><td>2D U-Net</td><td>BraTS 2021 (pre-treatment)</td><td>0.648</td></tr>
+          <tr><td>3D U-Net</td><td>BraTS 2021 (pre-treatment)</td><td>0.911</td></tr>
+          <tr><td>3D U-Net</td><td>BraTS 2024 (post-treatment)</td><td>0.471</td></tr>
+        </tbody>
+      </table></div>
+      <p>The jump from 2D to 3D was striking. Mean Dice rose from 0.65 to 0.91, which puts my 3D U-Net in the same range as well-known published models.</p>
+      <figure>
+        <img src="images/dice-comparison.png" alt="Bar chart comparing Dice scores by tumor region for three published models, the 2D U-Net, the 3D U-Net, and the 3D U-Net on post-treatment scans" loading="lazy" width="1316" height="432">
+        <figcaption>Figure 3. Dice scores for each tumor region. The 3D U-Net (pink) is close to published models like nnU-Net and Swin UNETR, while the same model on post-treatment scans (dark red) drops sharply.</figcaption>
+      </figure>
+      <p>The post-treatment scans told a different story. Scores fell to 0.60 for the whole tumor and to around 0.40 for the tumor core and enhancing regions. Much of that drop comes down to surgery. Removing a tumor leaves behind a resection cavity, and because the model had never seen one during training, it had no idea what to make of it.</p>
+      <figure>
+        <img src="images/gradcam-posttreatment.jpg" alt="Four panels from a post-treatment scan showing the scan, expert labels with the resection cavity in yellow, the model's prediction, and a Grad-CAM heatmap" loading="lazy" width="2800" height="800">
+        <figcaption>Figure 4. A post-treatment patient. The expert labels mark the resection cavity in yellow, and the model misses it, with its attention spread across the whole scan.</figcaption>
+      </figure>
+    </div>
+    <div class="block"><h3>What I Learned</h3><p>This project taught me that a strong score on one dataset doesn't guarantee a model will hold up in the real world. Treatment changes how tumors look on MRI, sometimes dramatically. If these tools are going to help patients, they need to be trained and tested across the whole course of care, not only at diagnosis. That gap between a benchmark and the clinic is a big part of why I want to keep working in cancer research.</p></div>
+    <p><a href="https://github.com/kayliehynes1/Dissertation" target="_blank" rel="noopener">View the code on GitHub</a></p>
+  </section>
+
+  <!-- SYNAPSE -->
+  <section id="synapse" role="tabpanel" hidden>
+    <div class="block">
+      <span class="eyebrow">Research Assistant · Allodi Lab, University of St Andrews</span>
+      <h2>hTDP-43 3D Synapse Analysis</h2>
+      <div class="meta"><span class="chip">Light-Sheet Microscopy</span><span class="chip">Cellpose</span><span class="chip">FIJI</span><span class="chip">Python</span></div>
+    </div>
+    <p>In this project, I'm building a 3D image analysis pipeline that counts the synapses on individual motor neurons in light-sheet microscopy data. The lab's earlier work measured these connections in flat 2D slices. Moving to 3D lets us see each neuron, and every connection on it, in full.</p>
+    <div class="notice">
+      <span class="eyebrow">Under Construction</span>
+      <h3>Full Write-Up Coming Soon</h3>
+      <p>This project is still in progress. I'll add the methods, figures, and results here once they're ready to share.</p>
+    </div>
+  </section>
+
+  <!-- PROJECT 3 -->
+  <section id="project3" role="tabpanel" hidden>
+    <div class="block">
+      <span class="eyebrow">Portfolio Project</span>
+      <h2>Project 3</h2>
+      <div class="meta"><span class="chip">[Dataset]</span><span class="chip">[Tools]</span><span class="chip status">Planned</span></div>
+    </div>
+    <div class="block"><h3>The Question</h3><p class="ph">[Coming soon.]</p></div>
+  </section>
+
+  <!-- PROJECT 4 -->
+  <section id="project4" role="tabpanel" hidden>
+    <div class="block">
+      <span class="eyebrow">Portfolio Project</span>
+      <h2>Project 4</h2>
+      <div class="meta"><span class="chip">[Dataset]</span><span class="chip">[Tools]</span><span class="chip status">Planned</span></div>
+    </div>
+    <div class="block"><h3>The Question</h3><p class="ph">[Coming soon.]</p></div>
+  </section>
+
+  <!-- READING -->
+  <section id="reading" role="tabpanel" hidden>
+    <div class="block">
+      <span class="eyebrow">Reading Notes</span>
+      <h2>Papers I've Read</h2>
+      <p class="lede">Short plain-language summaries of papers that shaped my work.</p>
+    </div>
+    <div class="list">
+      <div class="row"><div class="when">[Month 2026]</div><div><h3>[Paper title]</h3><p class="ph">[Authors, journal, year. Two or three sentences on what they found and why it matters.]</p></div></div>
+      <div class="row"><div class="when">[Month 2026]</div><div><h3>[Paper title]</h3><p class="ph">[Summary.]</p></div></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" role="tabpanel" hidden>
+    <div class="block">
+      <span class="eyebrow">About</span>
+      <h2>Background</h2>
+      <p>I earned my B.S. in Information Technology from Pace University's Seidenberg School, where I focused on software development and took coursework in database management and cybersecurity. I also spent five years working in a medical office. Every day, I worked with electronic health records, and I saw firsthand how patient information moves through real clinical care, along with how easily referrals and follow-ups can slip through the cracks. That experience is what first drew me to medical AI. I came to St Andrews to earn my MSc in Computer Science, focusing on deep learning for medical imaging. Today, I also work as a research assistant in a neuroscience lab, building tools to analyze 3D microscopy data. My long-term goal is a career in cancer research.</p>
+    </div>
+    <div class="list">
+      <div class="row"><div class="when">Education</div><div><h3>MSc Computer Science</h3><p>University of St Andrews</p></div></div>
+      <div class="row"><div class="when">Education</div><div><h3>B.S. Information Technology</h3><p>Pace University, Seidenberg School · Focus in Software Development</p></div></div>
+      <div class="row"><div class="when">Research</div><div><h3>Research Assistant</h3><p>Dr Allodi Laboratory, School of Neuroscience, University of St Andrews</p></div></div>
+      <div class="row"><div class="when">2020–2025</div><div><h3>Medical Office Operator</h3><p>Dr Frank Scafuri &amp; Associates, Staten Island, NY. Organized and audited patient records across multiple practitioners, tracked referrals and follow-ups, and kept sensitive health data accurate and confidential.</p></div></div>
+      <div class="row"><div class="when">2022–2025</div><div><h3>Data and Legal Roles</h3><p>Data Clerk at KI Legal, Paralegal at the Law Office of Helene Hartig, and earlier data entry and billing roles in New York. Most of this work was cleaning, organizing, and automating large sets of records.</p></div></div>
+    </div>
+    <div class="block"><h3>Skills</h3><div class="meta">
+      <span class="chip">Python</span><span class="chip">PyTorch</span><span class="chip">TensorFlow / Keras</span><span class="chip">MONAI</span><span class="chip">NiBabel</span><span class="chip">scikit-learn</span><span class="chip">Pandas</span><span class="chip">Matplotlib</span><span class="chip">MATLAB</span><span class="chip">Cellpose</span><span class="chip">FIJI</span><span class="chip">HPC / SLURM</span><span class="chip">HTML / JavaScript</span><span class="chip">Flask</span>
+    </div></div>
+    <div class="block"><h3>Contact</h3><p>kayliehynes101@gmail.com · <a href="https://github.com/kayliehynes1" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/in/kaylie-hynes-/" target="_blank" rel="noopener">LinkedIn</a></p></div>
+  </section>
+
+</main>
+
+<footer class="wrap">© 2026 Kaylie Hynes</footer>
+
+<script>
+(function () {
+  var tabs = document.querySelectorAll('.tab');
+  var panels = document.querySelectorAll('[role="tabpanel"]');
+  function show(id) {
+    if (!document.getElementById(id)) id = 'home';
+    panels.forEach(function (p) { p.hidden = p.id !== id; });
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.dataset.tab === id ? 'true' : 'false'); });
+    var active = document.querySelector('.tab[data-tab="' + id + '"]');
+    if (active && active.scrollIntoView) active.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+  function go(id) {
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
+    show(id);
+    window.scrollTo(0, 0);
+  }
+  tabs.forEach(function (t) { t.addEventListener('click', function () { go(t.dataset.tab); }); });
+  document.querySelectorAll('[data-go]').forEach(function (c) { c.addEventListener('click', function () { go(c.dataset.go); }); });
+  window.addEventListener('hashchange', function () { show(location.hash.slice(1)); });
+  show(location.hash.slice(1) || 'home');
+})();
+</script>
+
+</body>
+</html>
