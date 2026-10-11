@@ -57,6 +57,7 @@ nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; backgrou
 
 /* Panels */
 main { padding-block: 32px 64px; }
+section[role="tabpanel"] { scroll-margin-top: 80px; }   /* keeps the title clear of the tab bar when opened from a direct link */
 section { display: grid; gap: 28px; }
 h2 { font-family: var(--display); font-weight: 400; font-size: 2rem; line-height: 1.15; margin: 0; text-wrap: balance; }
 h3 { font-family: var(--display); font-weight: 700; font-size: 1.12rem; margin: 0; }
@@ -99,11 +100,14 @@ figcaption { font-size: 0.85rem; color: var(--muted); }
 .list { display: grid; gap: 0; border-top: 1px solid var(--line); }
 .row { display: grid; grid-template-columns: 110px 1fr; gap: 16px; padding-block: 14px; border-bottom: 1px solid var(--line); }
 .row > div { min-width: 0; }
-.tablewrap { overflow-x: auto; }
+.tablewrap { overflow-x: auto; max-width: 100%; }
+section > *, .block > *, .row > div { min-width: 0; }   /* lets wide tables scroll inside their box instead of stretching the page */
 table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
 th, td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line); }
 th { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
 td:last-child, th:last-child { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; padding-right: 0; }
+.cite { font-style: italic; color: var(--muted); font-size: 0.95rem; }
+table.plain td:last-child, table.plain th:last-child { text-align: left; font-family: inherit; }
 .row .when { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 @media (max-width: 520px) { .row { grid-template-columns: 1fr; gap: 4px; } }
 
@@ -136,8 +140,8 @@ footer { border-top: 1px solid var(--line); padding-block: 24px; font-size: 0.85
     <span class="sep"></span>
     <button class="tab" role="tab" data-tab="dissertation">Brain Tumor Segmentation</button>
     <button class="tab" role="tab" data-tab="synapse">hTDP-43 Synapses</button>
-    <button class="tab" role="tab" data-tab="project3">Project 3</button>
-    <button class="tab" role="tab" data-tab="project4">Project 4</button>
+    <button class="tab" role="tab" data-tab="project3">Tumor Shape &amp; Genetics</button>
+    <button class="tab" role="tab" data-tab="project4">Glioma Gene Expression</button>
     <span class="sep"></span>
     <button class="tab" role="tab" data-tab="reading">Reading Notes</button>
     <button class="tab" role="tab" data-tab="about">About</button>
@@ -156,8 +160,8 @@ footer { border-top: 1px solid var(--line); padding-block: 24px; font-size: 0.85
     <div class="grid">
       <button class="card" data-go="dissertation"><span class="k">Dissertation · Brain Tumors</span><h3>Brain Tumor Segmentation</h3><p>3D U-Net Detection of Gliomas in MRI</p></button>
       <button class="card" data-go="synapse"><span class="k">Research · Coming Soon</span><h3>hTDP-43 3D Synapse Analysis</h3><p>3D Image Analysis of Light-Sheet Microscopy</p></button>
-      <button class="card" data-go="project3"><span class="k">In Progress · Cancer Genomics</span><h3>Project 3</h3><p>Details Coming Soon</p></button>
-      <button class="card" data-go="project4"><span class="k">Planned · Cancer Genomics</span><h3>Project 4</h3><p>Details Coming Soon</p></button>
+      <button class="card" data-go="project3"><span class="k">Complete · Imaging + Genomics</span><h3>Tumor Shape and Genetics in Gliomas</h3><p>Does a Tumor's Shape on MRI Reflect Its Genetics?</p></button>
+      <button class="card" data-go="project4"><span class="k">Planned · Cancer Genomics</span><h3>Glioma Gene Expression and Survival</h3><p>Which Genes Are Linked to Patient Outcomes?</p></button>
     </div>
   </section>
 
@@ -226,23 +230,105 @@ footer { border-top: 1px solid var(--line); padding-block: 24px; font-size: 0.85
   <!-- PROJECT 3 -->
   <section id="project3" role="tabpanel" hidden>
     <div class="block">
-      <span class="eyebrow">Portfolio Project</span>
-      <h2>Project 3</h2>
-      <div class="meta"><span class="chip">Cancer Genomics</span><span class="chip status">In Progress</span></div>
+      <span class="eyebrow">Portfolio Project · 2026</span>
+      <h2>Tumor Shape and Genetics in Gliomas</h2>
+      <div class="meta"><span class="chip">TCGA Lower-Grade Glioma</span><span class="chip">U-Net</span><span class="chip">Radiogenomics</span><span class="chip">PyTorch</span><span class="chip status">Complete</span></div>
     </div>
-    <div class="notice">
-      <span class="eyebrow">Under Construction</span>
-      <h3>Project Details Coming Soon</h3>
-      <p>I'm working on this project now. I'll share the question, the data, my methods, and the results here as the work comes together.</p>
+
+    <div class="block"><h3>The Question</h3><p>Can the shape of a brain tumor on an MRI scan tell us something about its genetics? Today, the only way to learn a tumor's genetic makeup is to take a piece of it during surgery and send it to a lab. If the shape a tumor takes on a routine scan reflects what is happening inside its genes, an MRI could one day offer early clues before anyone picks up a scalpel. This idea is called radiogenomics, and this project puts it to the test on a public set of 110 patients.</p></div>
+
+    <div class="block"><h3>Background</h3><p>Gliomas are tumors that start in glial cells, the cells that support and protect the brain's neurons. Lower-grade gliomas grow more slowly than the glioblastomas from my dissertation, but they often become more aggressive over time, which is why doctors follow them so closely.</p><p>The Cancer Genome Atlas, a large US research project, measured several kinds of activity inside each of these tumors. Some measurements look at which genes are switched on, others at chemical tags that switch genes off, and others at chunks of DNA that have gone missing or been copied. For each kind of measurement, a computer sorted the patients into groups, called clusters, whose tumors looked alike. Tumors in different clusters can behave very differently. They may also grow differently. Some push outward as a smooth, compact mass, while others creep into the surrounding brain with uneven, finger-like edges. If those growth patterns follow the clusters, the difference should show up in the tumor's shape.</p></div>
+
+    <div class="block"><h3>Data</h3><p>I used a public dataset released alongside a 2019 study by Buda, Saha, and Mazurowski. It holds 3,929 MRI slices from 110 patients, each with three scan types (pre-contrast, FLAIR, and post-contrast), an expert's outline of the tumor on every slice, and each patient's genetic clusters from The Cancer Genome Atlas.</p></div>
+
+    <div class="block"><h3>Approach</h3><p>The project had four main steps. First, I trained a U-Net, the same kind of model as in my dissertation, to outline each tumor automatically. To make the test fair, I split the patients into five groups and trained five separate models, each one tested only on patients it had never seen. Every patient ended up with an outline drawn by a model that had no prior look at their brain.</p><p>Second, I measured each tumor's shape in five ways. Third, I tested whether those shapes differed between genetic clusters. Finally, I ran every test twice, once using the expert's outlines and once using the model's, to see whether an automatic pipeline would reach the same conclusions as a person drawing by hand.</p></div>
+
+    <figure>
+      <img src="images/p3-shape-examples.png" alt="Four MRI slices with tumors outlined in red, showing the least round, most round, smoothest, and most irregular tumors in the dataset" loading="lazy" width="2000" height="571">
+      <figcaption>Figure 1. What the shape measures look like on real tumors. The least round tumor (far left) reaches into the brain with finger-like edges and also has the most irregular edge (far right). The roundest tumor is a smooth, compact mass with the smoothest edge.</figcaption>
+    </figure>
+
+    <div class="block">
+      <h3>Measuring Shape</h3>
+      <p>Each measure boils a tumor outline down to a single number. Before using them on real tumors, I checked every one on simple test shapes like a circle, an oval, and a star, to make sure each number captured what it was supposed to.</p>
+      <div class="tablewrap"><table class="plain">
+        <thead><tr><th>Measure</th><th>What it describes</th></tr></thead>
+        <tbody>
+          <tr><td>Size</td><td>Total tumor area across all slices</td></tr>
+          <tr><td>Roundness</td><td>How close the outline is to a perfect circle</td></tr>
+          <tr><td>Solidity</td><td>How filled-in the shape is, compared with a rubber band stretched around it</td></tr>
+          <tr><td>Elongation</td><td>How stretched out the shape is</td></tr>
+          <tr><td>Edge irregularity</td><td>How bumpy the edge is, once the overall shape is set aside</td></tr>
+        </tbody>
+      </table></div>
     </div>
+
+    <div class="block">
+      <h3>Finding and Fixing Failures</h3>
+      <p>The first version of the model did well on most patients but missed the tumor completely in 10 of them. Rather than move on, I went back and compared those 10 patients with everyone else. Two causes stood out. Their scans were much darker overall, so the tumors never looked bright enough for the model to notice. Several were also missing one or two scan types, which the dataset fills in with copies of the FLAIR scan, an image the model had rarely seen during training.</p>
+      <p>The second version fixed both. It evens out the brightness of each patient's scans before training, and it randomly swaps scan types for copies of the FLAIR during training so the model learns to cope. Nine of the 10 failures came back, most of them with a Dice score above 0.5. The fixes did not lift the model across the board, though. Across the other 100 patients, about as many got slightly worse as got better, which is a useful reminder that every training run lands a little differently.</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th></th><th>Version 1</th><th>Version 2</th><th>Buda et al.</th></tr></thead>
+        <tbody>
+          <tr><td>Mean Dice</td><td>0.682</td><td>0.749</td><td>0.82</td></tr>
+          <tr><td>Median Dice</td><td>0.799</td><td>0.830</td><td>0.85</td></tr>
+          <tr><td>Complete misses</td><td>10</td><td>2</td><td>Not reported</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <figure>
+      <img src="images/p3-dice-v1-vs-v2-scatter.png" alt="Scatter plot of each patient's Dice score in version 1 against version 2, with the ten rescued patients highlighted on the left edge" loading="lazy" width="2000" height="1250">
+      <figcaption>Figure 2. Each patient's Dice score before and after the fixes. Dots above the dashed line improved. The green dots on the left are the 10 patients the first model missed completely, nine of whom were rescued.</figcaption>
+    </figure>
+
+    <div class="block">
+      <h3>Results</h3>
+      <p>Tumor shape does track genetics in this dataset. Of the 35 combinations of shape measure and genetic cluster, 12 showed a significant difference between groups, even after a correction for running so many tests at once. The clearest pattern involved RNASeqCluster, the grouping based on which genes are switched on. Tumors in group 1 formed the most compact masses with the smoothest edges. Tumors in group 2 were the least solid, with the most dents and inlets.</p>
+      <p>Size also differed between groups. One protein-based group had tumors about two and a half times larger than the others. These size results are new, though, since the original study did not test them, so I treat them as leads rather than firm findings.</p>
+    </div>
+
+    <figure>
+      <img src="images/p3-shape-genetics-top-results.png" alt="Four dot plots showing solidity, edge irregularity, and size split by genetic group, with group medians marked" loading="lazy" width="2000" height="571">
+      <figcaption>Figure 3. The four strongest results. Each dot is one patient, and the black line marks each group's median. In RNASeqCluster (first two panels), group 1 tumors are clearly more solid and have smoother edges than the other groups.</figcaption>
+    </figure>
+
+    <div class="block">
+      <h3>Expert vs. Model Outlines</h3>
+      <p>When I reran every test using the model's outlines instead of the expert's, 11 of the 12 findings held up. That matters because it means the whole pipeline, from raw scan to genetic clue, can run without a person drawing anything by hand. The model does have one consistent habit, though. It draws smoother outlines than the expert, rounding off the fine, wiggly details at the edge of a tumor. Since edge detail is part of what is being linked to genetics, that habit is worth keeping in mind.</p>
+    </div>
+
+    <figure>
+      <img src="images/p3-shape-genetics-heatmap.png" alt="Two heatmaps of adjusted p-values for every shape measure and genetic cluster, one using expert outlines and one using model outlines" loading="lazy" width="2000" height="909">
+      <figcaption>Figure 4. All 35 tests, run with the expert's outlines (left) and the model's (right). Darker squares mean stronger evidence, and stars mark results that passed the cutoff after correcting for multiple tests. The same squares light up in both panels.</figcaption>
+    </figure>
+
+    <div class="block">
+      <h3>Comparison With the Original Study</h3>
+      <p>The 2019 study behind this dataset found two shape features linked to RNASeqCluster. One captured how compact a tumor is, and the other captured how bumpy its edge is. Working independently, with my own model, my own shape code, and a different statistical test, I found the same two links, and they were my two strongest results. Both studies also singled out RNASeq group 2 as having the most irregular tumors.</p>
+      <div class="tablewrap"><table class="plain">
+        <thead><tr><th>Finding</th><th>Buda et al. (2019)</th><th>This project</th></tr></thead>
+        <tbody>
+          <tr><td>Compactness vs. RNASeqCluster</td><td>p &lt; 0.0002</td><td>adjusted p &lt; 0.001</td></tr>
+          <tr><td>Edge bumpiness vs. RNASeqCluster</td><td>p &lt; 0.005</td><td>adjusted p = 0.008</td></tr>
+          <tr><td>Most irregular group</td><td>RNASeq group 2</td><td>RNASeq group 2</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="block"><h3>Limitations</h3><p>These results show a link between shape and genetics, not that one causes the other. The genetic clusters also overlap with each other, so the 12 significant results are better read as a few consistent patterns than as 12 separate discoveries. All 110 patients come from a single collection, and any finding would need to hold up in a new group of patients before it could mean anything in a clinic. Finally, my model still falls a little short of the original study's segmentation accuracy.</p></div>
+
+    <div class="block"><h3>What I Learned</h3><p>This project taught me as much about checking my own work as about building it. The first model's average score looked reasonable, and it would have been easy to move on. Looking closely at the failures is what revealed the dark scans and missing scan types. It also showed me what a careful comparison looks like, from testing shape measures on simple shapes before trusting them, to reporting the patients who got worse alongside the ones who got better. Above all, it was my first real step from medical images into genetics, and seeing the two line up in my own results is exactly why I want to keep working in cancer research.</p></div>
+
+    <p><a href="https://github.com/kayliehynes1/glioma-shape-genomics" target="_blank" rel="noopener">View the code on GitHub</a></p>
   </section>
 
   <!-- PROJECT 4 -->
   <section id="project4" role="tabpanel" hidden>
     <div class="block">
       <span class="eyebrow">Portfolio Project</span>
-      <h2>Project 4</h2>
-      <div class="meta"><span class="chip">Cancer Genomics</span><span class="chip status">Planned</span></div>
+      <h2>Glioma Gene Expression and Survival</h2>
+      <div class="meta"><span class="chip">TCGA Glioma</span><span class="chip">Differential Expression</span><span class="chip">Survival Analysis</span><span class="chip status">Planned</span></div>
     </div>
     <div class="notice">
       <span class="eyebrow">Coming Soon</span>
@@ -258,10 +344,16 @@ footer { border-top: 1px solid var(--line); padding-block: 24px; font-size: 0.85
       <h2>Papers I've Read</h2>
       <p class="lede">Short, plain-language summaries of the papers that shape how I think about my work.</p>
     </div>
-    <div class="notice">
-      <span class="eyebrow">Coming Soon</span>
-      <h3>First Summaries on the Way</h3>
-      <p>I'm reading through key papers in cancer genomics and medical imaging, and I'll post my notes here as I finish them.</p>
+    <div class="list">
+      <div class="row"><div class="when">Oct 2026</div><div class="block">
+        <h3>Association of Genomic Subtypes of Lower-Grade Gliomas With Shape Features Automatically Extracted by a Deep Learning Algorithm</h3>
+        <p class="cite">Buda M, Saha A, Mazurowski MA. Computers in Biology and Medicine, 2019.</p>
+        <p><b>The question.</b> Lower-grade gliomas fall into genetic subtypes that behave very differently, but finding out which subtype a patient has requires a tissue sample. The authors asked whether the shape of the tumor on a routine MRI could hint at its subtype, and whether a computer could measure that shape on its own, without an expert drawing the outline by hand.</p>
+        <p><b>What they did.</b> They gathered MRI scans from 110 patients in The Cancer Genome Atlas and trained a deep learning model, a U-Net, to outline each tumor on the FLAIR scan. The model's outlines matched an expert's closely, with a mean Dice score of 82% and a median of 85%. From those automatic outlines they measured three shape features. One captured how much of a snug, oval wrapper the tumor filled in 3D (the bounding ellipsoid volume ratio). The other two captured how uneven the distance from the tumor's center to its edge was (angular standard deviation) and how bumpy the edge was once the overall shape was smoothed away (margin fluctuation). They then tested ten pairs of shape features and genetic subtypes chosen in advance, using a strict cutoff to guard against chance findings.</p>
+        <p><b>What they found.</b> Two links passed the strict cutoff, and both involved the subtype based on gene activity, RNASeqCluster. Less compact tumors were tied to particular gene-activity groups, and so were tumors with bumpier edges. One group, R2, stood out for its irregular shapes, and the compactness measure alone could pick out R2 tumors fairly well. The authors described these links as moderate. They were real and measurable, but not strong enough to replace a tissue test.</p>
+        <p><b>Why it matters.</b> The study showed that a fully automatic pipeline, from raw scan to shape measurement, could pick up genetic signals that until then had required a lab. It also released its data publicly, which made it possible for others to build on the work.</p>
+        <p><b>My takeaway.</b> This paper was the starting point for my <a href="#project3">Tumor Shape and Genetics</a> project. I used its dataset, built my own model and shape measures, and found the same two links to RNASeqCluster, including the same irregular group. Reproducing a published result from scratch showed me how much care goes into each step, and how much a clear, open dataset can do for other researchers.</p>
+      </div></div>
     </div>
   </section>
 
